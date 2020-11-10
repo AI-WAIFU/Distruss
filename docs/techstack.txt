@@ -1,0 +1,9 @@
+-vue.js
+-Typescript
+-Distruss Fed Protocol
+-nginx
+-Redis
+-Flask
+-YugabyteDB 
+-docker-compose
+-docker

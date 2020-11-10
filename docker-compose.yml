@@ -1,0 +1,38 @@
+version: "3.5"
+
+services:
+  app:
+    container_name: app
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - /src:/code
+    environment:
+      FLASK_ENV: development
+    depends_on:
+      - "cache"
+      - "database"
+  cache:
+    image: "redis:alpine"
+    container_name: cache
+  webserver:
+    image: "nginx:alpine"
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - "app"
+  database:
+    image: "yugabytedb/yugabyte:latest"
+    container_name: database
+    command: ["bin/yugabyted", "start", "--daemon=false"]
+    volumes:
+      - ./db:/home/yugabyte/var
+    ports:
+      - "7000:7000"
+      - "9000:9000"
+      - "5433:5433"
+      - "9042:9042"

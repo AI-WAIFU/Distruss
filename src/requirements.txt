@@ -1,0 +1,12 @@
+flask
+redis
+yb-cassandra-driver
+flask-bcrypt
+flask-caching
+flask-login
+flask-limiter
+flask-mail
+psycopg2-binary
+pytest
+flake8
+pynacl
