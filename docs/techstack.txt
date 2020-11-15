@@ -2,8 +2,11 @@
 -Typescript
 -Distruss Fed Protocol
 -nginx
+-Bjoern
 -Redis
 -Flask
+-Alembic
+-sqlalchemy
 -YugabyteDB 
 -docker-compose
 -docker
