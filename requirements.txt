@@ -5,6 +5,8 @@ redis
 #yb-cassandra-driver
 sqlalchemy
 psycopg2-binary
+flask-redis
+flask-sqlalchemy
 flask-bcrypt
 flask-caching
 flask-login

@@ -19,7 +19,7 @@ DATABASE = 'yugabyte'
 DB_HOST = 'database'
 DB_PORT = 5433
 
-uri = 'postgresql+psycopg2://%s:%s@%s:%s/%s'
+uri = 'postgresql+psycopg2://yugabyte:yugabyte@database:5433/yugabyte'
 uri %= (DB_USER, 
         DB_PASSWORD, 
         DB_HOST, 
@@ -41,16 +41,4 @@ class Customers(Base):
    email = Column(String)
 Base.metadata.create_all(engine)
 
-"""
-class DataAccessUtil(object):
-    def __init__(self):
-        uri = 'postgresql+psycopg2://%s:%s@%s:%s/%s'
-        uri %= (DB_USER, 
-                DB_PASSWORD, 
-                DB_HOST, 
-                DB_PORT, 
-                DATABASE)
-        engine = create_engine(uri, echo=True)
-        self.Session = sessionmaker(bind=engine)
-"""
 

@@ -1,6 +1,6 @@
 FROM python:3.8-alpine
 WORKDIR /code
-ENV FLASK_APP=app.py
+ENV FLASK_APP=src
 ENV FLASK_RUN_HOST=0.0.0.0
 COPY requirements.txt requirements.txt
 RUN \
@@ -18,6 +18,5 @@ RUN \
  python3 -m pip install -r requirements.txt --no-cache-dir && \
  apk --purge del .build-deps
 EXPOSE 5000
-COPY src/ .
-CMD ["python", "db_test.py"]
-#CMD ["flask", "run"]
+COPY . .
+CMD ["flask", "run"]
