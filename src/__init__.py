@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_redis import FlaskRedis
 import click
 
+from flask import redirect
+
 CONFIG_FILE = 'config.json'
 
 db = SQLAlchemy()
@@ -17,12 +19,26 @@ def create_app(test_config=None):
     #attach models to db
     from . import database
     db.init_app(app)
+
+    #register init-db cli option
+    app.cli.add_command(init_db_command)
+
+    #setup cache
     cache.init_app(app)
 
-    # a simple page that says hello
+    #register api
+    from . import api
+    app.register_blueprint(api.bp)
+
+    #culture
+    @app.route('/kaka')
+    def kaka():
+        return redirect('https://kaka.moe/')
+
+    #hello
     @app.route('/hello')
     def hello():
-        return 'Hello, World!'
+        return 'Hello World!'
 
     return app
 
@@ -31,6 +47,6 @@ def create_app(test_config=None):
 def init_db_command():
     """Clear the existing data and create new tables."""
     app = create_app()
-    db.drop_all(app=create_app())
-    db.create_all(app=create_app())
+    db.drop_all(app=app)
+    db.create_all(app=app)
     click.echo('Initialized the database.')

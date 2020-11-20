@@ -1,2 +1,9 @@
 
-cache = redis.Redis(host='cache', port=6379)
+from . import cache
+
+def get_post():
+    pass
+
+
+def add_post():
+    pass
