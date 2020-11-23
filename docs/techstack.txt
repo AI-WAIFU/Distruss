@@ -1,6 +1,7 @@
 -vue.js
--Typescript
+-ES6/Typescript
 -Distruss Fed Protocol
+-jsonschema
 -nginx
 -Bjoern
 -Redis

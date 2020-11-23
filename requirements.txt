@@ -3,6 +3,7 @@ flask
 #bjoern
 redis
 #yb-cassandra-driver
+fastjsonschema
 sqlalchemy
 psycopg2-binary
 flask-redis

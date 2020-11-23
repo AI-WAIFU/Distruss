@@ -13,7 +13,12 @@ cache = FlaskRedis()
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+    #TODO: Serve static files with nginx
+    app = Flask(__name__, 
+            instance_relative_config=True,
+            static_url_path='',
+            static_folder='./static',
+            template_folder='./templates')
     app.config.from_json(CONFIG_FILE)
 
     #attach models to db
@@ -27,19 +32,13 @@ def create_app(test_config=None):
     cache.init_app(app)
 
     #register api
-    from . import api
-    app.register_blueprint(api.bp)
-
-    #culture
-    @app.route('/kaka')
-    def kaka():
-        return redirect('https://kaka.moe/')
-
-    #hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello World!'
-
+    #from . import api
+    #app.register_blueprint(api.bp)
+    
+    #register main
+    from . import main 
+    app.register_blueprint(main.bp)
+    
     return app
 
 @click.command('init-db')

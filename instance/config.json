@@ -3,5 +3,6 @@
 	"SECRET_KEY":"dev",
         "SQLALCHEMY_DATABASE_URI":"postgresql+psycopg2://yugabyte:yugabyte@database:5433/yugabyte",
         "SQLALCHEMY_ECHO":true,
-	"REDIS_URL":"redis://:@cache:6379/0"
+	"REDIS_URL":"redis://:@cache:6379/0",
+	"DOMAIN":"localhost"
 }

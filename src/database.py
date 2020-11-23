@@ -25,18 +25,20 @@ class Communities(db.Model):
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
     name = Column(VARCHAR(48))
-    distinguisher = Column(SMALLINT)
+    tag = Column(SMALLINT)
 
 class Users(db.Model):
     id = Column(BIGINT, primary_key=True)
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
+    email = Column(VARCHAR(320))
+    phone = Column(VARCHAR(15))
     salt = Column(BIT(256))
-    distinguisher = Column(SMALLINT)
+    tag = Column(SMALLINT)
     username = Column(VARCHAR(48))
     password = Column(VARCHAR(184))
     public_key = Column(VARCHAR(10000))
-    private_key = Column(VARCHAR(10000))
+    private_key = Column(VARCHAR(3000))
     domain = Column(VARCHAR(512), ForeignKey('federated_instances.domain'))
 
 class Posts(db.Model):
@@ -44,6 +46,7 @@ class Posts(db.Model):
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
     error_code = Column(SMALLINT)
+    title = Column(VARCHAR(512))
     text = Column(VARCHAR(100000))
     url = Column(VARCHAR(32768))
     author = Column(BIGINT, ForeignKey('users.id'))
@@ -81,6 +84,14 @@ class Gates(db.Model):
     description = Column(VARCHAR(100000))
     url = Column(VARCHAR(32768))
 
+class UserGates(db.Model):
+    id = Column(BIGINT, primary_key=True)
+    uuid = Column(UUID, unique=True)
+    creation_time = Column(TIMESTAMP)
+    gate = Column(BIGINT, ForeignKey('gates.id'))
+    user_uuid = Column(UUID)
+    user_domain = Column(VARCHAR(512))
+
 class CommunityGates(db.Model):
     id = Column(BIGINT, primary_key=True)
     uuid = Column(UUID, unique=True)
@@ -89,6 +100,15 @@ class CommunityGates(db.Model):
     gate_domain = Column(VARCHAR(512))
     gate_domain = Column(VARCHAR(512))
     permission_level = Column(SMALLINT)
+    community = Column(BIGINT, ForeignKey('communities.id'))
+
+class CommunityModerators(db.Model):
+    id = Column(BIGINT, primary_key=True)
+    uuid = Column(UUID, unique=True)
+    creation_time = Column(TIMESTAMP)
+    permission_level = Column(SMALLINT)
+    rank = Column(SMALLINT)
+    user = Column(BIGINT, ForeignKey('users.id'))
     community = Column(BIGINT, ForeignKey('communities.id'))
 
 class Bans(db.Model):
