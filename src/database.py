@@ -85,7 +85,7 @@ class Gates(db.Model):
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
     name = Column(VARCHAR(128))
-    tag = Column(smallint)
+    tag = Column(SMALLINT)
     description = Column(VARCHAR(100000))
     url = Column(VARCHAR(32768))
     user_uuid = Column(UUID)

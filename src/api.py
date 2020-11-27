@@ -1,6 +1,5 @@
 import functools
 import json
-import jsonschema
 from flask import Flask
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify, current_app
@@ -61,7 +60,7 @@ def get_comment(comment_id):
     return jsonify(dl.get_comment(UserID(),comment_id=comment_id))
 
 @bp.route('/comment/<int:comment_id>/',methods=('UPDATE',))
-def update_comment(comment_id)):
+def update_comment(comment_id):
     data = validate_request(['text'])
     dl.update_comment(UserID(),**data)
     return 'OK'
@@ -70,8 +69,7 @@ def update_comment(comment_id)):
 #------------------------------------------------------------------
 @bp.route('/community/',methods=('GET',))
 def get_communities():
-    dl.get_communies(UserID())
-    return 'OK'
+    return jsonify(dl.get_communies(UserID()))
 
 @bp.route('/community/',methods=('POST',))
 def add_community():
@@ -79,41 +77,39 @@ def add_community():
     dl.add_community(UserID(),**data)
     return 'OK'
 
-@bp.route('/community/int:community_id>/',methods=('GET',))
+@bp.route('/community/<int:community_id>/',methods=('GET',))
 def get_community(community_id):
-    data = validate_request(['value'])
-    data['community_id'] = community_id
-    return jsonify(dl.get_community_settings(gate_uuid=gate_uuid))
+    return jsonify(dl.get_community_settings(UserID(), community_id=community_id))
 
 @bp.route('/community/<int:community_id>/settings/',methods=('GET',))
 def get_community_settings(community_id):
    return jsonify(dl.get_community_settings(UserID(),gate_uuid=gate_uuid))
 
 @bp.route('/community/<int:community_id>/settings/',methods=('UPDATE',))
-def update_community_settings()
+def update_community_settings():
     data = validate_request(['name'])
-    dl.update_community_settings(,**data)
+    dl.update_community_settings(UserID(),**data)
     return 'OK'
 
 #CommunityGates
 #------------------------------------------------------------------
-@bp.route('/community/<int:community_id>/gates/',methods=('GET'))
-def get_community_gates()
+@bp.route('/community/<int:community_id>/gates/',methods=('GET',))
+def get_community_gates():
     data = validate_request(['gate_uuid','gate_domain'])
     data['community_id'] = community_id
     data = validate_request(['name'])
     return dl.get_community_gates(UserID(),community_id=community_id)
     return 'OK'
 
-@bp.route('/community/<int:community_id>/gates/',methods=('POST'))
-def add_community_gates()
+@bp.route('/community/<int:community_id>/gates/',methods=('POST',))
+def add_community_gates():
     data = validate_request(['gate_uuid','gate_domain'])
     data['community_id'] = community_id
     dl.add_community_gate(UserID(), data)
     return 'OK'
 
-@bp.route('/community/<int:community_id>/gates/',methods=('DELETE'))
-def remove_community_gate()
+@bp.route('/community/<int:community_id>/gates/',methods=('DELETE',))
+def remove_community_gate():
     data = validate_request(['gate_uuid','gate_domain'])
     data['community_id'] = community_id
     dl.remove_community_gate(UserID(), data)
@@ -144,8 +140,8 @@ def remove_community_mod(community_id):
 #CommunityBans
 #------------------------------------------------------------------
 @bp.route('/community/<int:community_id>/bans/',methods=('GET',))
-def get_gates(community_id):
-    return jsonify(dl.get_bans(UserID,community_id=community_id)))
+def get_bans(community_id):
+    return jsonify(dl.get_bans(UserID(),community_id=community_id))
 
 @bp.route('/community/<int:community_id>/bans/',methods=('POST',))
 def add_ban(community_id):
@@ -203,20 +199,21 @@ def get_gate_settings(gate_uuid):
 #GateUsers
 #------------------------------------------------------------------
 @bp.route("/gate/<string:gate_uuid>/",methods=('GET',))
-def check_gate(gate_uuid)
+def check_gate(gate_uuid):
     data = validate_request(['user_uuid','user_domain'])
+    data['gate_uuid'] = gate_uuid
     response = dl.check_gate(**data)
     return jsonify(response)
 
 @bp.route("/gate/<string:gate_uuid>/",methods=('POST',))
-def add_gate_user(gate_uuid)
+def add_gate_user(gate_uuid):
     data = validate_request(['user_uuid','user_domain'])
     data['gate_uuid'] = gate_uuid
     response = dl.add_gate_user(UserID(),**data)
     return jsonify(response)
 
 @bp.route("/gate/<string:gate_uuid>/",methods=('DELETE',))
-def remove_gate_user(gate_uuid)
+def remove_gate_user(gate_uuid):
     data = validate_request(['user_uuid','user_domain'])
     data['gate_uuid'] = gate_uuid
     response = dl.remove_gate_user(UserID(),**data)
@@ -229,7 +226,7 @@ def remove_gate_user(gate_uuid)
 def get_key(user_uuid):
     return jsonify(dl.get_public_key(userid))
 
-@bp.route('/login/',methods=('POST'))
+@bp.route('/login/',methods=('POST',))
 def login():
     data = validate_request(['username','tag','password'])
     result = dl.login(data)
@@ -254,7 +251,7 @@ def signup():
     return 'OK'
     
 @bp.route('/verify/', methods=('GET','POST',))
-def verify()
+def verify():
     if request.method == 'GET':
         data = validate_request(['uuid','domain'])
         return jsonify(dl.gen_token(**data))
@@ -271,7 +268,7 @@ def verify()
 
 def validate_request(fields):
     data = request.get_json()
-    for field in fields
+    for field in fields:
         if field not in data:
             #TODO:Add proper exceptions
             raise Exception
