@@ -131,3 +131,6 @@ dmypy.json
 # Vim extensions
 *.swp
 *.swo
+
+#DB Location
+db/*

@@ -49,7 +49,8 @@ class Posts(db.Model):
     title = Column(VARCHAR(512))
     text = Column(VARCHAR(100000))
     url = Column(VARCHAR(32768))
-    author = Column(BIGINT, ForeignKey('users.id'))
+    user_uuid = Column(UUID)
+    user_domain = Column(VARCHAR(512))
     community = Column(BIGINT, ForeignKey('communities.id'))
 
 class PostVotes(db.Model):
@@ -57,7 +58,8 @@ class PostVotes(db.Model):
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
     post = Column(BIGINT, ForeignKey('posts.id'))
-    user = Column(BIGINT, ForeignKey('users.id'))
+    user_uuid = Column(UUID)
+    user_domain = Column(VARCHAR(512))
 
 class Comments(db.Model):
     id = Column(BIGINT, primary_key=True)
@@ -65,8 +67,9 @@ class Comments(db.Model):
     creation_time = Column(TIMESTAMP)
     error_code = Column(SMALLINT)
     text = Column(VARCHAR(100000))
+    user_uuid = Column(UUID)
+    user_domain = Column(VARCHAR(512))
     parent = Column(BIGINT, ForeignKey('comments.id'))
-    author = Column(BIGINT, ForeignKey('users.id'))
     post = Column(BIGINT, ForeignKey('posts.id'))
 
 class CommentVotes(db.Model):
@@ -74,17 +77,21 @@ class CommentVotes(db.Model):
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
     comment = Column(BIGINT, ForeignKey('comments.id'))
-    user = Column(BIGINT, ForeignKey('users.id'))
+    user_uuid = Column(UUID)
+    user_domain = Column(VARCHAR(512))
 
 class Gates(db.Model):
     id = Column(BIGINT, primary_key=True)
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
     name = Column(VARCHAR(128))
+    tag = Column(smallint)
     description = Column(VARCHAR(100000))
     url = Column(VARCHAR(32768))
+    user_uuid = Column(UUID)
+    user_domain = Column(VARCHAR(512))
 
-class UserGates(db.Model):
+class GateUsers(db.Model):
     id = Column(BIGINT, primary_key=True)
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
@@ -97,7 +104,6 @@ class CommunityGates(db.Model):
     uuid = Column(UUID, unique=True)
     creation_time = Column(TIMESTAMP)
     gate_uuid = Column(UUID)
-    gate_domain = Column(VARCHAR(512))
     gate_domain = Column(VARCHAR(512))
     permission_level = Column(SMALLINT)
     community = Column(BIGINT, ForeignKey('communities.id'))
