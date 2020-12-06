@@ -1,0 +1,76 @@
+:root {
+  --color0: white;
+  --color1: coral;
+  --color2: bisque;
+  --color3: forestgreen;
+}
+
+p {
+  font-family: Tahoma, Verdana, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;*/
+}
+
+html, body, div{
+  height: 100%;
+}
+
+.main-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-rows: 0.2fr 3fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "header header header"
+    "communities content friends";
+}
+
+.header-grid-container { 
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "left-header center-header right-header";
+}
+
+.right-header { 
+  grid-area: right-header; 
+  background-color: var(--color2);
+}
+
+.center-header { 
+  grid-area: center-header; 
+  background-color: var(--color0);
+}
+
+.left-header { 
+  grid-area: left-header; 
+  background-color: var(--color3);
+}
+
+.header { 
+  grid-area: header; 
+  background-color: var(--color0);
+}
+
+.content { 
+  grid-area: content; 
+  background-color: var(--color1);
+  overflow-y:scroll
+}
+
+.communities { 
+  grid-area: communities; 
+  background-color: var(--color2);
+  overflow-y:scroll
+}
+
+.friends { 
+  grid-area: friends; 
+  background-color: var(--color3);
+  overflow-y:scroll
+}

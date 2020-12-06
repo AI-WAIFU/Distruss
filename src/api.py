@@ -9,8 +9,6 @@ from src import data_layer as dl
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
-#TODO: Get from config
-DOMAIN = ""
 
 #API schema
 #------------------------------------------------------------------
@@ -32,7 +30,7 @@ def directory():
 def add_post(post_id):
     data = request.get_json()
     data = validate_request(['title','url','text','community'])
-    dl.add_comment(UserID(),**data)
+    dl.add_post(UserID(),**data)
     data["msg"]
     return 'OK'
 
@@ -83,7 +81,7 @@ def get_community(community_id):
 
 @bp.route('/community/<int:community_id>/settings/',methods=('GET',))
 def get_community_settings(community_id):
-   return jsonify(dl.get_community_settings(UserID(),gate_uuid=gate_uuid))
+   return jsonify(dl.get_community_settings(UserID()))
 
 @bp.route('/community/<int:community_id>/settings/',methods=('UPDATE',))
 def update_community_settings():
@@ -94,22 +92,18 @@ def update_community_settings():
 #CommunityGates
 #------------------------------------------------------------------
 @bp.route('/community/<int:community_id>/gates/',methods=('GET',))
-def get_community_gates():
-    data = validate_request(['gate_uuid','gate_domain'])
-    data['community_id'] = community_id
-    data = validate_request(['name'])
+def get_community_gates(community_id):
     return dl.get_community_gates(UserID(),community_id=community_id)
-    return 'OK'
 
 @bp.route('/community/<int:community_id>/gates/',methods=('POST',))
-def add_community_gates():
+def add_community_gate(community_id):
     data = validate_request(['gate_uuid','gate_domain'])
     data['community_id'] = community_id
     dl.add_community_gate(UserID(), data)
     return 'OK'
 
 @bp.route('/community/<int:community_id>/gates/',methods=('DELETE',))
-def remove_community_gate():
+def remove_community_gate(community_id):
     data = validate_request(['gate_uuid','gate_domain'])
     data['community_id'] = community_id
     dl.remove_community_gate(UserID(), data)
@@ -134,8 +128,6 @@ def remove_community_mod(community_id):
     data['community_id'] = community_id
     dl.remove_community_mods(UserID(),**data)
     return 'OK'
-
-
 
 #CommunityBans
 #------------------------------------------------------------------
@@ -224,7 +216,7 @@ def remove_gate_user(gate_uuid):
 #TODO: investigate the security of this meme-tier encryption scheme
 @bp.route('/pubkey/<string:user_uuid>/')
 def get_key(user_uuid):
-    return jsonify(dl.get_public_key(userid))
+    return jsonify(dl.get_public_key(user_uuid=user_uuid))
 
 @bp.route('/login/',methods=('POST',))
 def login():
@@ -235,7 +227,7 @@ def login():
         session['USERNAME'] = username
         session['TAG'] = tag 
         session['UUID'] =  result['uuid']
-        session['DOMAIN'] = DOMAIN
+        session['DOMAIN'] = domain() 
         session['PRIVATE_KEY'] = private_key
         return 'OK'
 
@@ -253,8 +245,8 @@ def signup():
 @bp.route('/verify/', methods=('GET','POST',))
 def verify():
     if request.method == 'GET':
-        data = validate_request(['uuid','domain'])
-        return jsonify(dl.gen_token(**data))
+        data = validate_request(['user_uuid','domain'])
+        return jsonify(dl.generate_token(**data))
     
     data = validate_request(['username','tag','token','signature'])
     result = dl.validate_token(**data) 
@@ -265,6 +257,9 @@ def verify():
         session['UUID'] = result['uuid']
         session['DOMAIN'] = result['domain']
         return 'OK'
+
+def domain():
+    current_app.config['DOMAIN']
 
 def validate_request(fields):
     data = request.get_json()
