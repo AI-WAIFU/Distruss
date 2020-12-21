@@ -114,7 +114,7 @@ def remove_community_gate(community_id):
 @bp.route('/community/<int:community_id>/mods/',methods=('GET',))
 def get_community_mods(community_id):
     return jsonify(dl.get_community_mods(UserID(),community_id=community_id))
-    
+
 @bp.route('/community/<int:community_id>/mods/',methods=('POST',))
 def add_community_mod(community_id):
     data = validate_request(['user_uuid','user_domain','permission_level','rank'])
@@ -225,9 +225,9 @@ def login():
     if private_key is not None:
         session.clear()
         session['USERNAME'] = username
-        session['TAG'] = tag 
+        session['TAG'] = tag
         session['UUID'] =  result['uuid']
-        session['DOMAIN'] = domain() 
+        session['DOMAIN'] = domain()
         session['PRIVATE_KEY'] = private_key
         return 'OK'
 
@@ -241,18 +241,18 @@ def signup():
     data = validate_request(['username','tag','password'])
     result = dl.signup(**data)
     return 'OK'
-    
+
 @bp.route('/verify/', methods=('GET','POST',))
 def verify():
     if request.method == 'GET':
         data = validate_request(['user_uuid','domain'])
         return jsonify(dl.generate_token(**data))
-    
+
     data = validate_request(['username','tag','token','signature'])
-    result = dl.validate_token(**data) 
+    result = dl.validate_token(**data)
     if result:
         session.clear()
-        session['USERNAME'] = data['username'] 
+        session['USERNAME'] = data['username']
         session['TAG'] = data['tag']
         session['UUID'] = result['uuid']
         session['DOMAIN'] = result['domain']

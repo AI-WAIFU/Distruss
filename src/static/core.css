@@ -1,12 +1,8 @@
 :root {
-  --color0: white;
-  --color1: coral;
-  --color2: bisque;
-  --color3: forestgreen;
-}
-
-p {
-  font-family: Tahoma, Verdana, sans-serif;
+  --color0: #112211;
+  --color1: #223322;
+  --color2: #334433;
+  --color3: #445544;
 }
 
 * {
@@ -14,8 +10,41 @@ p {
   padding: 0;*/
 }
 
+p, label {
+  font-family: Tahoma, Verdana, sans-serif;
+}
+
 html, body, div{
   height: 100%;
+}
+
+#auth {
+  display: block;
+}
+
+.auth-grid-container {
+  display: grid;
+  grid-template-columns: 0.6fr 1.4fr 1.4fr 0.6fr;
+  grid-template-rows: 0.4fr 2.2fr 0.4fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". . . ."
+    ". login signup ."
+    ". . . .";
+}
+
+.login { 
+  grid-area: login; 
+  background-color: var(--color1);
+}
+
+.signup { 
+  grid-area: signup; 
+  background-color: var(--color2);
+}
+
+#main-app {
+  display: none;
 }
 
 .main-grid-container {
@@ -74,3 +103,30 @@ html, body, div{
   background-color: var(--color3);
   overflow-y:scroll
 }
+
+#user-settings {
+  display: none;
+}
+
+.settings-grid-container {
+  display: grid;
+  grid-template-columns: 0.4fr 1.6fr;
+  grid-template-rows: 0.1fr 1.9fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". ."
+    "settings-tabs settings-options";
+}
+
+.settings-options { 
+  grid-area: settings-options; 
+  background-color: var(--color1);
+}
+
+.settings-tabs { 
+  grid-area: settings-tabs; 
+  background-color: var(--color2);
+  text-align: right;
+}
+
+

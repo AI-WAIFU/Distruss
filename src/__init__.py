@@ -14,7 +14,7 @@ cache = FlaskRedis()
 def create_app(test_config=None):
     # create and configure the app
     #TODO: Serve static files with nginx
-    app = Flask(__name__, 
+    app = Flask(__name__,
             instance_relative_config=True,
             static_url_path='',
             static_folder='./static',
@@ -32,13 +32,13 @@ def create_app(test_config=None):
     cache.init_app(app)
 
     #register api
-    #from . import api
-    #app.register_blueprint(api.bp)
-    
+    from . import api
+    app.register_blueprint(api.bp)
+
     #register main
-    from . import main 
+    from . import main
     app.register_blueprint(main.bp)
-    
+
     return app
 
 @click.command('init-db')
